@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+      @<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -451,4 +451,93 @@
     </a>
 
     <a href="ADD_REEL_6_LINK" target="_blank" class="reel-card reveal" style="transition-delay:0.24s">
-      <div class="reel-bg"><div class="reel-gl 
+      <div class="reel-bg"><div class="reel-glow"></div><div class="reel-icon">💫</div></div>
+      <div class="reel-badge">Collab</div>
+      <div class="reel-info">
+        <div class="reel-n">06</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="about-grid">
+    <div class="about-img reveal">
+      <div class="img-c tl"></div>
+      <div class="img-c br"></div>
+      <div class="img-ph">[ Your Photo ]<br><br>Upload photo.jpg to GitHub and replace this</div>
+    </div>
+    <div class="reveal" style="transition-delay:0.12s">
+      <div class="sec-eyebrow"><div class="sec-line"></div><span>About</span></div>
+      <h2 class="sec-title">The Vision <em>Behind Intrepid</em></h2>
+      <p class="about-text">
+        Hey, I'm <strong>Tahir</strong> — a content creator from India obsessed with dark, cinematic aesthetics. Intrepid is my lens on the world.<br><br>
+        Every reel I make has a feeling behind it. Not just views — <strong>vibes that hit different.</strong>
+      </p>
+      <div class="tags">
+        <span class="tag">Dark Aesthetic</span>
+        <span class="tag">Reels</span>
+        <span class="tag">Cinematic Edits</span>
+        <span class="tag">Cars</span>
+        <span class="tag">Mood Content</span>
+        <span class="tag">Storytelling</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="sec-eyebrow"><div class="sec-line"></div><span>Connect</span></div>
+      <h2 class="sec-title">Got a Collab <em>In Mind?</em></h2>
+      <p class="contact-desc">Open to brand deals, creative collabs, and projects that match the Intrepid energy. Let's make something worth watching.</p>
+      <a href="mailto:your@email.com" class="btn-gold">Send an Email</a>
+    </div>
+    <div class="links-list reveal" style="transition-delay:0.12s">
+      <a href="https://www.instagram.com/intrepid.01" target="_blank" class="link-row">
+        Instagram
+        <span class="link-handle">@intrepid.01 <span class="link-arrow">↗</span></span>
+      </a>
+      <a href="ADD_LINKEDIN_LINK" target="_blank" class="link-row">
+        LinkedIn
+        <span class="link-handle">Tahir <span class="link-arrow">↗</span></span>
+      </a>
+      <a href="mailto:your@email.com" class="link-row">
+        Email
+        <span class="link-handle">your@email.com <span class="link-arrow">↗</span></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Intrepid by Tahir.</p>
+  <div class="footer-logo">INTREPID</div>
+  <p>Made with intention.</p>
+</footer>
+
+<script>
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+  });
+  document.querySelectorAll('a,button').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('big'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('big'));
+  });
+  (function loop(){ rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); })();
+  const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
