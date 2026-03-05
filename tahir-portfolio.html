@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tahir — Content Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f4f0;
+    --cream: #ece9e0;
+    --accent: #c9a84c;
+    --muted: #888880;
+    --card: #141414;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.35s cubic-bezier(0.25,1,0.5,1), width 0.2s, height 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  a:hover ~ .cursor-ring, button:hover ~ .cursor-ring { width: 52px; height: 52px; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 60px;
+    z-index: 100;
+    mix-blend-mode: normal;
+  }
+  nav::after {
+    content: '';
+    position: absolute; bottom: 0; left: 60px; right: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+  }
+  .hero-line {
+    position: absolute; top: 0; right: 50%;
+    width: 1px; height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.15) 40%, rgba(201,168,76,0.15) 60%, transparent 100%);
+  }
+  .hero-left { position: relative; z-index: 2; padding-top: 80px; }
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 6px 14px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    font-weight: 700;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero-name em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .hero-desc {
+    margin-top: 28px;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 400px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .hero-cta {
+    margin-top: 48px;
+    display: flex; gap: 20px; align-items: center;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--black);
+    padding: 14px 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .btn-primary:hover { background: #e0b855; transform: translateY(-2px); }
+  .btn-ghost {
+    color: var(--white);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.3s;
+  }
+  .btn-ghost::after { content: '↓'; font-size: 1rem; transition: transform 0.3s; }
+  .btn-ghost:hover { color: var(--accent); }
+  .btn-ghost:hover::after { transform: translateY(4px); }
+
+  .hero-right {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: flex-end; gap: 24px;
+    padding-top: 80px;
+    animation: fadeIn 1.2s 0.3s ease both;
+  }
+  .hero-stat {
+    text-align: right;
+    border-right: 2px solid rgba(201,168,76,0.4);
+    padding-right: 24px;
+  }
+  .hero-stat .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+  .hero-stat .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .hero-image-box {
+    width: 280px; height: 360px;
+    border: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+    overflow: hidden;
+    background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-image-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+  }
+  .hero-image-placeholder {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 20px;
+    line-height: 1.8;
+  }
+  .hero-image-corner {
+    position: absolute; top: 12px; right: 12px;
+    width: 20px; height: 20px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+  }
+  .hero-image-corner2 {
+    position: absolute; bottom: 12px; left: 12px;
+    width: 20px; height: 20px;
+    border-bottom: 1px solid var(--accent);
+    border-left: 1px solid var(--accent);
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    overflow: hidden;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 18px 0;
+    background: rgba(201,168,76,0.03);
+  }
+  .marquee-track {
+    display: flex; gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 0 40px;
+    display: flex; align-items: center; gap: 40px;
+  }
+  .marquee-item::after {
+    content: '✦';
+    color: var(--accent);
+    font-size: 0.5rem;
+  }
+
+  /* WORK SECTION */
+  section { padding: 100px 60px; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 60px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .section-title em { font-style: italic; font-weight: 400; }
+  .section-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.05);
+    line-height: 1;
+  }
+
+  /* WORK GRID */
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .work-card {
+    background: var(--card);
+    aspect-ratio: 3/4;
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+    group: true;
+  }
+  .work-card-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: flex-end;
+    padding: 28px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    transform: translateY(40px);
+    opacity: 0.7;
+    transition: transform 0.4s cubic-bezier(0.25,1,0.5,1), opacity 0.4s;
+  }
+  .work-card:hover .work-card-inner {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .work-card-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.6s cubic-bezier(0.25,1,0.5,1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-card:hover .work-card-bg { transform: scale(1.05); }
+  .work-card-icon {
+    font-size: 3.5rem;
+    opacity: 0.15;
+  }
+  .work-card-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .work-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .work-card-desc {
+    font-size: 0.78rem;
+    color: rgba(245,244,240,0.6);
+    line-height: 1.6;
+  }
+  .work-card-tag {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 5px 12px;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  /* card colors */
+  .card-1 { background: #0f0f0f; }
+  .card-2 { background: #111109; }
+  .card-3 { background: #0d0d12; }
+  .card-4 { background: #0f110d; }
+  .card-5 { background: #110d0d; }
+  .card-6 { background: #0a0d11; }
+
+  /* ABOUT STRIP */
+  .about-strip {
+    background: var(--cream);
+    color: var(--black);
+    padding: 80px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-strip .section-label { color: #8a7a50; }
+  .about-strip .section-title { color: var(--black); }
+  .about-strip .section-title em { color: #8a7a50; }
+  .about-text {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: #444;
+  }
+  .skills-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 28px;
+  }
+  .skill-tag {
+    background: rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.12);
+    padding: 7px 16px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  /* CONTACT */
+  .contact-section {
+    padding: 100px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .contact-left .section-title { margin-bottom: 20px; }
+  .contact-sub {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+  .social-links { display: flex; flex-direction: column; gap: 16px; }
+  .social-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px;
+    border: 1px solid rgba(255,255,255,0.08);
+    text-decoration: none;
+    color: var(--white);
+    transition: border-color 0.3s, background 0.3s;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+  .social-link:hover {
+    border-color: var(--accent);
+    background: rgba(201,168,76,0.04);
+  }
+  .social-link span { color: var(--muted); font-size: 0.75rem; }
+  .social-link .arrow { color: var(--accent); }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 60px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  footer p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+  footer .footer-accent { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25,1,0.5,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    nav::after { left: 24px; right: 24px; }
+    .hero { grid-template-columns: 1fr; padding: 0 24px; }
+    .hero-right { display: none; }
+    section { padding: 70px 24px; }
+    .work-grid { grid-template-columns: 1fr 1fr; }
+    .about-strip { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .contact-section { grid-template-columns: 1fr; padding: 70px 24px; gap: 50px; }
+    footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Tahir</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-left">
+    <div class="hero-tag">Content Creator · Instagram</div>
+    <h1 class="hero-name">
+      Crafting<br>
+      <em>stories</em> that<br>
+      resonate.
+    </h1>
+    <p class="hero-desc">
+      I'm Tahir — a content creator turning ideas into visuals, reels into reach, and moments into brand stories.
+    </p>
+    <div class="hero-cta">
+      <a href="#work" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-stat">
+      <div class="num">100%</div>
+      <div class="label">Original Content</div>
+    </div>
+    <div class="hero-image-box">
+      <div class="hero-image-corner"></div>
+      <div class="hero-image-corner2"></div>
+      <div class="hero-image-placeholder">
+        [ Your Photo Here ]<br><br>
+        Upload your best shot — portrait, candid, or on-set
+      </div>
+    </div>
+    <div class="hero-stat">
+      <div class="num">∞</div>
+      <div class="label">Creative Ideas</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item">Instagram Reels</div>
+    <div class="marquee-item">Content Strategy</div>
+    <div class="marquee-item">Visual Storytelling</div>
+    <div class="marquee-item">Brand Content</div>
+    <div class="marquee-item">Short-form Video</div>
+    <div class="marquee-item">Creative Direction</div>
+    <div class="marquee-item">Instagram Reels</div>
+    <div class="marquee-item">Content Strategy</div>
+    <div class="marquee-item">Visual Storytelling</div>
+    <div class="marquee-item">Brand Content</div>
+    <div class="marquee-item">Short-form Video</div>
+    <div class="marquee-item">Creative Direction</div>
+  </div>
+</div>
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Selected Work</div>
+      <h2 class="section-title">Projects & <em>Campaigns</em></h2>
+    </div>
+    <div class="section-count">06</div>
+  </div>
+
+  <div class="work-grid">
+    <div class="work-card card-1 reveal">
+      <div class="work-card-bg"><div class="work-card-icon">🎬</div></div>
+      <div class="work-card-tag">Reels</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">01</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description of this reel or campaign. What was the concept?</div>
+      </div>
+    </div>
+
+    <div class="work-card card-2 reveal" style="transition-delay:0.1s">
+      <div class="work-card-bg"><div class="work-card-icon">📸</div></div>
+      <div class="work-card-tag">Photography</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">02</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description of this project. What made it stand out?</div>
+      </div>
+    </div>
+
+    <div class="work-card card-3 reveal" style="transition-delay:0.2s">
+      <div class="work-card-bg"><div class="work-card-icon">✨</div></div>
+      <div class="work-card-tag">Brand Collab</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">03</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description of this brand collaboration or campaign.</div>
+      </div>
+    </div>
+
+    <div class="work-card card-4 reveal" style="transition-delay:0.1s">
+      <div class="work-card-bg"><div class="work-card-icon">🎞️</div></div>
+      <div class="work-card-tag">Series</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">04</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description. What was the theme of this series?</div>
+      </div>
+    </div>
+
+    <div class="work-card card-5 reveal" style="transition-delay:0.2s">
+      <div class="work-card-bg"><div class="work-card-icon">🌐</div></div>
+      <div class="work-card-tag">Trending</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">05</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description of this viral or trending piece of content.</div>
+      </div>
+    </div>
+
+    <div class="work-card card-6 reveal" style="transition-delay:0.3s">
+      <div class="work-card-bg"><div class="work-card-icon">🔥</div></div>
+      <div class="work-card-tag">Creative</div>
+      <div class="work-card-inner">
+        <div class="work-card-num">06</div>
+        <div class="work-card-title">Project Name Here</div>
+        <div class="work-card-desc">Short description of this creative project or personal piece.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="about-strip" id="about">
+  <div class="reveal">
+    <div class="section-label">About Me</div>
+    <h2 class="section-title">The <em>person</em><br>behind the lens.</h2>
+  </div>
+  <div class="reveal" style="transition-delay:0.15s">
+    <p class="about-text">
+      Hey, I'm <strong>Tahir</strong> — a content creator based in India with a passion for building engaging, scroll-stopping content on Instagram. I blend storytelling with aesthetics to create reels and visuals that actually connect with people.<br><br>
+      Whether it's a brand campaign, a personal project, or a creative idea, I bring intention and energy to everything I make.
+    </p>
+    <div class="skills-row">
+      <span class="skill-tag">Reels</span>
+      <span class="skill-tag">Video Editing</span>
+      <span class="skill-tag">Scripting</span>
+      <span class="skill-tag">Ideation</span>
+      <span class="skill-tag">Trends</span>
+      <span class="skill-tag">Brand Voice</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-left reveal">
+    <div class="section-label">Let's Connect</div>
+    <h2 class="section-title">Got a project<br>in <em>mind?</em></h2>
+    <p class="contact-sub">Open to collaborations, brand deals, and creative projects. Drop a message — let's build something worth watching.</p>
+    <a href="mailto:your@email.com" class="btn-primary">Send an Email</a>
+  </div>
+  <div class="social-links reveal" style="transition-delay:0.15s">
+    <a href="#" class="social-link">
+      Instagram
+      <span>@your_handle <span class="arrow">↗</span></span>
+    </a>
+    <a href="#" class="social-link">
+      LinkedIn
+      <span>Tahir <span class="arrow">↗</span></span>
+    </a>
+    <a href="#" class="social-link">
+      Email
+      <span>your@email.com <span class="arrow">↗</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 <span class="footer-accent">Tahir</span>. All rights reserved.</p>
+  <p>Designed with intention.</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
