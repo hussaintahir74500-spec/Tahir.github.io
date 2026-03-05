@@ -4,544 +4,178 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Intrepid — by Tahir</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&family=Outfit:wght@200;300;400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #080c18;
-    --navy-mid: #0d1526;
-    --navy-light: #131d35;
-    --navy-card: #0f1828;
+    --black: #060606;
+    --black2: #0e0e0e;
+    --black3: #141414;
     --gold: #c9a84c;
-    --gold-light: #e8c96a;
-    --gold-dim: rgba(201,168,76,0.15);
-    --white: #f0ece4;
-    --muted: #7a8299;
-    --border: rgba(201,168,76,0.12);
+    --gold2: #e8c96a;
+    --gold-dim: rgba(201,168,76,0.1);
+    --gold-border: rgba(201,168,76,0.15);
+    --white: #f2ede4;
+    --muted: #6e6e6e;
   }
-
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-
   body {
-    background: var(--navy);
+    background: var(--black);
     color: var(--white);
     font-family: 'Outfit', sans-serif;
     font-weight: 300;
     overflow-x: hidden;
     cursor: none;
   }
-
-  /* CURSOR */
   .cursor {
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    position: fixed; pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s;
+    width: 6px; height: 6px;
+    background: var(--gold); border-radius: 50%;
+    position: fixed; pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
   }
   .cursor-ring {
-    width: 32px; height: 32px;
-    border: 1px solid rgba(201,168,76,0.5);
-    border-radius: 50%;
-    position: fixed; pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
+    width: 28px; height: 28px;
+    border: 1px solid rgba(201,168,76,0.6); border-radius: 50%;
+    position: fixed; pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: width 0.25s, height 0.25s, border-color 0.25s;
   }
-  .cursor-ring.hovered { width: 48px; height: 48px; border-color: var(--gold); }
-
-  /* GRAIN */
+  .cursor-ring.big { width: 44px; height: 44px; border-color: var(--gold); }
   body::after {
     content: '';
     position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 500; opacity: 0.4; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 500; opacity: 0.5; mix-blend-mode: overlay;
   }
-
-  /* STARS BG */
-  .stars {
-    position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-  }
-  .star {
-    position: absolute;
-    background: var(--gold);
-    border-radius: 50%;
-    animation: twinkle var(--d) ease-in-out infinite alternate;
-    opacity: 0;
-  }
-  @keyframes twinkle {
-    0% { opacity: 0; transform: scale(0.8); }
-    100% { opacity: var(--o); transform: scale(1.2); }
-  }
-
-  /* NAV */
   nav {
     position: fixed; top: 0; left: 0; right: 0;
-    padding: 26px 64px;
+    padding: 24px 60px;
     display: flex; justify-content: space-between; align-items: center;
-    z-index: 100;
-    background: linear-gradient(180deg, rgba(8,12,24,0.95) 0%, transparent 100%);
-    backdrop-filter: blur(8px);
+    z-index: 200;
+    background: linear-gradient(180deg, rgba(6,6,6,0.98) 0%, transparent 100%);
   }
-  .nav-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .nav-logo span { color: var(--gold); }
-  .nav-links { display: flex; gap: 40px; list-style: none; }
-  .nav-links a {
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.3s;
-    font-weight: 400;
-  }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.2em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a { font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s; }
   .nav-links a:hover { color: var(--gold); }
 
   /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    justify-content: center;
-    padding: 0 64px;
-    position: relative; overflow: hidden;
+  .hero { height: 100vh; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 0 60px 80px; }
+  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45; z-index: 0; }
+  .hero-fallback {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.07) 0%, transparent 65%), linear-gradient(180deg, var(--black) 0%, #0a0800 100%);
+    z-index: 0;
   }
-  .hero-glow {
-    position: absolute;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
-    top: 50%; left: 60%; transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-  .hero-glow2 {
-    position: absolute;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(13,21,38,0.9) 0%, transparent 70%);
-    top: 30%; left: 10%;
-    pointer-events: none;
-  }
-  .hero-eyebrow {
-    display: flex; align-items: center; gap: 16px;
-    margin-bottom: 32px;
-    animation: fadeUp 0.9s ease both;
-  }
-  .hero-eyebrow-line {
-    width: 48px; height: 1px;
-    background: var(--gold);
-  }
-  .hero-eyebrow span {
-    font-size: 0.68rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 400;
-  }
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(4rem, 8vw, 7.5rem);
-    font-weight: 700;
-    line-height: 0.95;
-    max-width: 800px;
-    position: relative; z-index: 2;
-    animation: fadeUp 0.9s 0.1s ease both;
-  }
-  .hero-title em {
-    font-style: italic;
-    font-weight: 300;
-    color: var(--gold);
-    display: block;
-  }
-  .hero-sub {
-    margin-top: 32px;
-    font-size: 1rem;
-    color: var(--muted);
-    line-height: 1.9;
-    max-width: 480px;
-    font-weight: 300;
-    animation: fadeUp 0.9s 0.2s ease both;
-    position: relative; z-index: 2;
-  }
-  .hero-actions {
-    margin-top: 52px;
-    display: flex; gap: 24px; align-items: center;
-    animation: fadeUp 0.9s 0.3s ease both;
-    position: relative; z-index: 2;
-  }
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-    color: var(--navy);
-    padding: 15px 36px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 8px 32px rgba(201,168,76,0.2);
-  }
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.35); }
-  .btn-outline {
-    border: 1px solid rgba(201,168,76,0.3);
-    color: var(--gold);
-    padding: 15px 36px;
-    font-size: 0.72rem;
-    font-weight: 400;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: border-color 0.3s, background 0.3s;
-  }
-  .btn-outline:hover { border-color: var(--gold); background: var(--gold-dim); }
-
-  .hero-scroll {
-    position: absolute; bottom: 48px; left: 64px;
-    display: flex; align-items: center; gap: 12px;
-    animation: fadeUp 0.9s 0.5s ease both;
-  }
-  .scroll-line {
-    width: 1px; height: 48px;
-    background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
-    animation: scrollPulse 2s ease-in-out infinite;
-  }
-  .scroll-text {
-    font-size: 0.62rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--muted);
-    writing-mode: vertical-rl;
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 1; }
-  }
-
-  /* DIVIDER */
-  .gold-divider {
-    display: flex; align-items: center; gap: 20px;
-    padding: 0 64px;
-    margin: 0;
-  }
-  .gold-divider-line { flex: 1; height: 1px; background: var(--border); }
-  .gold-divider-diamond {
-    width: 6px; height: 6px;
-    background: var(--gold);
-    transform: rotate(45deg);
-  }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.3) 50%, transparent 100%); z-index: 1; }
+  .hero-content { position: relative; z-index: 2; max-width: 750px; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 24px; animation: fadeUp 1s ease both; }
+  .hero-tag-line { width: 36px; height: 1px; background: var(--gold); }
+  .hero-tag span { font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
+  .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4.5rem, 10vw, 9rem); line-height: 0.92; letter-spacing: 0.03em; animation: fadeUp 1s 0.1s ease both; }
+  .hero-title .gold { color: var(--gold); }
+  .hero-title .italic { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 0.65em; color: rgba(242,237,228,0.6); display: block; letter-spacing: 0.08em; margin-top: 4px; }
+  .hero-desc { margin-top: 24px; font-size: 0.95rem; color: var(--muted); line-height: 1.85; max-width: 420px; animation: fadeUp 1s 0.2s ease both; }
+  .hero-btns { margin-top: 40px; display: flex; gap: 16px; align-items: center; animation: fadeUp 1s 0.3s ease both; }
+  .btn-gold { background: var(--gold); color: var(--black); padding: 14px 34px; font-family: 'Outfit', sans-serif; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; transition: background 0.3s, transform 0.2s; box-shadow: 0 6px 28px rgba(201,168,76,0.25); }
+  .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); }
+  .btn-ghost { border: 1px solid var(--gold-border); color: var(--gold); padding: 14px 34px; font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; transition: border-color 0.3s, background 0.3s; }
+  .btn-ghost:hover { border-color: var(--gold); background: var(--gold-dim); }
+  .hero-scroll-hint { position: absolute; right: 60px; bottom: 80px; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: fadeIn 1s 0.8s ease both; }
+  .scroll-label { font-size: 0.58rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); writing-mode: vertical-rl; }
+  .scroll-bar { width: 1px; height: 52px; background: linear-gradient(180deg, var(--gold) 0%, transparent 100%); animation: scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
 
   /* MARQUEE */
-  .marquee-wrap {
-    overflow: hidden;
-    padding: 20px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: rgba(201,168,76,0.02);
-    margin: 48px 0;
-  }
-  .marquee-track {
-    display: flex;
-    animation: marquee 25s linear infinite;
-    white-space: nowrap;
-  }
-  .marquee-item {
-    padding: 0 48px;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex; align-items: center; gap: 48px;
-  }
-  .marquee-item::after { content: '◆'; color: var(--gold); font-size: 0.4rem; }
+  .marquee-wrap { overflow: hidden; border-top: 1px solid var(--gold-border); border-bottom: 1px solid var(--gold-border); padding: 16px 0; background: rgba(201,168,76,0.02); }
+  .marquee-track { display: flex; animation: marquee 28s linear infinite; white-space: nowrap; }
+  .marquee-item { padding: 0 44px; font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 44px; }
+  .marquee-item::after { content: '◆'; color: var(--gold); font-size: 0.38rem; }
 
   /* SECTIONS */
-  section { padding: 100px 64px; position: relative; }
+  section { padding: 90px 60px; }
+  .sec-eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .sec-line { width: 28px; height: 1px; background: var(--gold); }
+  .sec-eyebrow span { font-size: 0.62rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
+  .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem, 5vw, 4.5rem); letter-spacing: 0.05em; line-height: 1; }
+  .sec-title em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 0.75em; color: var(--gold); letter-spacing: 0.08em; }
 
-  .sec-label {
-    display: flex; align-items: center; gap: 14px;
-    margin-bottom: 16px;
-  }
-  .sec-label-line { width: 32px; height: 1px; background: var(--gold); }
-  .sec-label span {
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 400;
-  }
-  .sec-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2.2rem, 4vw, 3.5rem);
-    font-weight: 700;
-    line-height: 1.1;
-  }
-  .sec-title em { font-style: italic; font-weight: 300; color: var(--gold); }
+  /* WORK */
+  .work-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--gold-border); }
+  .work-num { font-family: 'Bebas Neue', sans-serif; font-size: 7rem; line-height: 1; color: rgba(201,168,76,0.05); letter-spacing: 0.05em; }
+  .work-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
 
-  /* WORK GRID */
-  .work-header {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    margin-bottom: 56px;
-    padding-bottom: 28px;
-    border-bottom: 1px solid var(--border);
-  }
-  .work-count {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 6rem;
-    font-weight: 700;
-    color: rgba(201,168,76,0.06);
-    line-height: 1;
-  }
-
-  .work-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-  }
-
-  .work-card {
-    background: var(--navy-card);
-    aspect-ratio: 9/14;
-    position: relative;
-    overflow: hidden;
-    cursor: none;
-    text-decoration: none;
-    display: block;
-    border: 1px solid var(--border);
-  }
-  .work-card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(0deg, rgba(8,12,24,0.95) 0%, rgba(8,12,24,0.3) 50%, transparent 100%);
-    z-index: 2;
-    transition: opacity 0.4s;
-  }
-  .work-card:hover::before { opacity: 0.7; }
-
-  .card-bg {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform 0.6s cubic-bezier(0.25,1,0.5,1);
-    background: var(--navy-light);
-  }
-  .work-card:hover .card-bg { transform: scale(1.06); }
-
-  .card-emoji { font-size: 4rem; opacity: 0.08; }
-
-  .card-glow {
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, rgba(201,168,76,0.05) 0%, transparent 70%);
-    z-index: 1;
-  }
-
-  .card-content {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    padding: 28px 24px;
-    z-index: 3;
-    transform: translateY(12px);
-    transition: transform 0.4s cubic-bezier(0.25,1,0.5,1);
-  }
-  .work-card:hover .card-content { transform: translateY(0); }
-
-  .card-num {
-    font-size: 0.6rem;
-    letter-spacing: 0.25em;
-    color: var(--gold);
-    margin-bottom: 8px;
-    font-weight: 400;
-  }
-  .card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 8px;
-    color: var(--white);
-  }
-  .card-desc {
-    font-size: 0.75rem;
-    color: rgba(240,236,228,0.55);
-    line-height: 1.6;
-    margin-bottom: 14px;
-  }
-  .card-link {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 400;
-    opacity: 0;
-    transition: opacity 0.3s 0.1s;
-  }
-  .work-card:hover .card-link { opacity: 1; }
-  .card-link::after { content: '↗'; font-size: 0.8rem; }
-
-  .card-tag {
-    position: absolute; top: 18px; right: 18px;
-    background: rgba(8,12,24,0.8);
-    border: 1px solid rgba(201,168,76,0.25);
-    padding: 5px 12px;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    z-index: 3;
-    backdrop-filter: blur(4px);
-  }
-
-  /* card accent colors */
-  .c1 { --accent: rgba(201,168,76,0.04); }
-  .c2 { --accent: rgba(100,120,180,0.04); }
-  .c3 { --accent: rgba(180,100,100,0.04); }
+  .reel-card { aspect-ratio: 9/14; position: relative; overflow: hidden; background: var(--black3); border: 1px solid rgba(201,168,76,0.08); text-decoration: none; display: block; cursor: none; }
+  .reel-card::before { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(0deg, rgba(6,6,6,0.95) 0%, rgba(6,6,6,0.2) 55%, transparent 100%); transition: opacity 0.4s; }
+  .reel-card:hover::before { opacity: 0.75; }
+  .reel-bg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 0.6s cubic-bezier(0.25,1,0.5,1); background: var(--black2); }
+  .reel-card:hover .reel-bg { transform: scale(1.07); }
+  .reel-icon { font-size: 3.5rem; opacity: 0.07; }
+  .reel-badge { position: absolute; top: 16px; right: 16px; z-index: 3; background: rgba(6,6,6,0.85); border: 1px solid var(--gold-border); padding: 4px 11px; font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); backdrop-filter: blur(6px); }
+  .reel-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 20px; z-index: 3; transform: translateY(10px); transition: transform 0.4s cubic-bezier(0.25,1,0.5,1); }
+  .reel-card:hover .reel-info { transform: translateY(0); }
+  .reel-n { font-size: 0.58rem; letter-spacing: 0.22em; color: var(--gold); margin-bottom: 6px; }
+  .reel-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.06em; line-height: 1.1; margin-bottom: 6px; color: var(--white); }
+  .reel-desc { font-size: 0.72rem; color: rgba(242,237,228,0.45); line-height: 1.6; margin-bottom: 12px; }
+  .reel-cta { display: flex; align-items: center; gap: 7px; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); opacity: 0; transition: opacity 0.3s 0.1s; }
+  .reel-card:hover .reel-cta { opacity: 1; }
+  .reel-cta::after { content: '↗'; }
 
   /* ABOUT */
-  .about-inner {
-    display: grid;
-    grid-template-columns: 1fr 1.4fr;
-    gap: 100px;
-    align-items: center;
-  }
-  .about-image {
-    aspect-ratio: 3/4;
-    background: var(--navy-light);
-    border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .about-image-corner {
-    position: absolute; top: 16px; right: 16px;
-    width: 24px; height: 24px;
-    border-top: 1px solid var(--gold);
-    border-right: 1px solid var(--gold);
-  }
-  .about-image-corner2 {
-    position: absolute; bottom: 16px; left: 16px;
-    width: 24px; height: 24px;
-    border-bottom: 1px solid var(--gold);
-    border-left: 1px solid var(--gold);
-  }
-  .about-image-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.9rem;
-    color: var(--muted);
-    text-align: center;
-    padding: 24px;
-    line-height: 2;
-  }
-  .about-text {
-    font-size: 1rem;
-    color: rgba(240,236,228,0.7);
-    line-height: 2;
-    margin: 28px 0;
-  }
-  .about-text strong { color: var(--white); font-weight: 500; }
-  .skills-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
-  .skill {
-    border: 1px solid var(--border);
-    padding: 7px 18px;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--muted);
-    transition: border-color 0.3s, color 0.3s;
-  }
-  .skill:hover { border-color: var(--gold); color: var(--gold); }
+  .about-section { background: var(--black2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: center; }
+  .about-img { aspect-ratio: 3/4; background: var(--black3); border: 1px solid var(--gold-border); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .img-corner { position: absolute; width: 22px; height: 22px; }
+  .img-corner.tl { top: 14px; right: 14px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+  .img-corner.br { bottom: 14px; left: 14px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
+  .img-placeholder { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: var(--muted); text-align: center; padding: 24px; line-height: 2.2; }
+  .about-text { font-size: 0.98rem; color: rgba(242,237,228,0.65); line-height: 2; margin: 24px 0; }
+  .about-text strong { color: var(--white); font-weight: 400; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .tag { border: 1px solid var(--gold-border); padding: 6px 16px; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); transition: border-color 0.3s, color 0.3s; }
+  .tag:hover { border-color: var(--gold); color: var(--gold); }
 
   /* CONTACT */
-  .contact-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .contact-desc {
-    font-size: 0.95rem;
-    color: var(--muted);
-    line-height: 1.9;
-    margin: 20px 0 40px;
-    max-width: 380px;
-  }
-  .social-list { display: flex; flex-direction: column; gap: 3px; }
-  .social-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 20px 24px;
-    border: 1px solid var(--border);
-    text-decoration: none;
-    color: var(--white);
-    transition: border-color 0.3s, background 0.3s;
-    font-size: 0.85rem;
-    letter-spacing: 0.06em;
-    font-weight: 300;
-  }
-  .social-item:hover { border-color: var(--gold); background: var(--gold-dim); }
-  .social-item-right { display: flex; align-items: center; gap: 12px; }
-  .social-item-handle { font-size: 0.72rem; color: var(--muted); }
-  .social-arrow { color: var(--gold); font-size: 0.9rem; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .contact-desc { font-size: 0.92rem; color: var(--muted); line-height: 1.9; margin: 18px 0 36px; max-width: 360px; }
+  .links-list { display: flex; flex-direction: column; gap: 2px; }
+  .link-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border: 1px solid var(--gold-border); text-decoration: none; color: var(--white); font-size: 0.82rem; letter-spacing: 0.06em; transition: border-color 0.3s, background 0.3s; }
+  .link-row:hover { border-color: var(--gold); background: var(--gold-dim); }
+  .link-handle { font-size: 0.7rem; color: var(--muted); }
+  .link-arrow { color: var(--gold); }
 
-  /* FOOTER */
-  footer {
-    padding: 36px 64px;
-    border-top: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  footer p { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
-  .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-  }
+  footer { padding: 28px 60px; border-top: 1px solid var(--gold-border); display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.2em; color: var(--gold); }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(32px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  .reveal {
-    opacity: 0; transform: translateY(36px);
-    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.25,1,0.5,1);
-  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.25,1,0.5,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .hero { padding: 0 24px; }
-    .hero-scroll { left: 24px; }
-    section { padding: 70px 24px; }
-    .gold-divider { padding: 0 24px; }
-    .work-grid { grid-template-columns: 1fr 1fr; }
-    .about-inner { grid-template-columns: 1fr; gap: 48px; }
-    .about-image { display: none; }
-    .contact-inner { grid-template-columns: 1fr; gap: 48px; }
-    footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+    nav { padding: 18px 22px; }
     .nav-links { display: none; }
+    .hero { padding: 0 22px 64px; }
+    .hero-scroll-hint { display: none; }
+    section { padding: 64px 22px; }
+    .work-grid { grid-template-columns: 1fr 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .about-img { display: none; }
+    .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+    footer { padding: 22px; flex-direction: column; gap: 14px; text-align: center; }
   }
 </style>
 </head>
 <body>
 
 <div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="stars" id="stars"></div>
+<div class="cursor-ring" id="ring"></div>
 
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">INTRE<span>PID</span></a>
+  <a href="#" class="logo">INTRE<span>PID</span></a>
   <ul class="nav-links">
     <li><a href="#work">Work</a></li>
     <li><a href="#about">About</a></li>
@@ -549,244 +183,180 @@
   </ul>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-
-  <div class="hero-eyebrow">
-    <div class="hero-eyebrow-line"></div>
-    <span>Content Creator · Instagram · Vibe</span>
+<div class="hero" id="home">
+  <!--
+    ═══════════════════════════════════════════
+    HERO VIDEO — TO ADD YOUR VIDEO:
+    1. Upload your video to GitHub repo
+    2. Rename it to: hero.mp4
+    3. Done — it auto plays here
+    ═══════════════════════════════════════════
+  -->
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-fallback"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <div class="hero-tag-line"></div>
+      <span>Content Creator · Instagram · Dark Aesthetic</span>
+    </div>
+    <h1 class="hero-title">
+      INTREPID<br>
+      <span class="gold">VIBES</span>
+      <span class="italic">crafted with intention.</span>
+    </h1>
+    <p class="hero-desc">I'm Tahir — the mind behind Intrepid. Dark, cinematic, unapologetic content that makes people stop and feel.</p>
+    <div class="hero-btns">
+      <a href="#work" class="btn-gold">View My Work</a>
+      <a href="#contact" class="btn-ghost">Collaborate</a>
+    </div>
   </div>
-
-  <h1 class="hero-title">
-    Creating vibes<br>
-    <em>the world feels.</em>
-  </h1>
-
-  <p class="hero-sub">
-    I'm Tahir — the mind behind Intrepid. I craft aesthetic reels, moods, and moments that make people stop scrolling and start feeling.
-  </p>
-
-  <div class="hero-actions">
-    <a href="#work" class="btn-gold">View My Work</a>
-    <a href="#contact" class="btn-outline">Collaborate</a>
-  </div>
-
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span class="scroll-text">Scroll</span>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <div class="marquee-item">Instagram Reels</div>
-    <div class="marquee-item">Vibe Content</div>
-    <div class="marquee-item">Aesthetic Direction</div>
-    <div class="marquee-item">Brand Storytelling</div>
-    <div class="marquee-item">Short-form Video</div>
-    <div class="marquee-item">Visual Identity</div>
-    <div class="marquee-item">Instagram Reels</div>
-    <div class="marquee-item">Vibe Content</div>
-    <div class="marquee-item">Aesthetic Direction</div>
-    <div class="marquee-item">Brand Storytelling</div>
-    <div class="marquee-item">Short-form Video</div>
-    <div class="marquee-item">Visual Identity</div>
+  <div class="hero-scroll-hint">
+    <span class="scroll-label">Scroll</span>
+    <div class="scroll-bar"></div>
   </div>
 </div>
 
-<!-- WORK -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Dark Aesthetic</div>
+    <div class="marquee-item">Instagram Reels</div>
+    <div class="marquee-item">Cinematic Edits</div>
+    <div class="marquee-item">Brand Collabs</div>
+    <div class="marquee-item">Vibe Content</div>
+    <div class="marquee-item">Visual Storytelling</div>
+    <div class="marquee-item">Dark Aesthetic</div>
+    <div class="marquee-item">Instagram Reels</div>
+    <div class="marquee-item">Cinematic Edits</div>
+    <div class="marquee-item">Brand Collabs</div>
+    <div class="marquee-item">Vibe Content</div>
+    <div class="marquee-item">Visual Storytelling</div>
+  </div>
+</div>
+
 <section id="work">
-  <div class="work-header reveal">
+  <div class="work-top reveal">
     <div>
-      <div class="sec-label"><div class="sec-label-line"></div><span>Selected Work</span></div>
-      <h2 class="sec-title">Reels & <em>Campaigns</em></h2>
+      <div class="sec-eyebrow"><div class="sec-line"></div><span>Selected Work</span></div>
+      <h2 class="sec-title">Reels & <em>Edits</em></h2>
     </div>
-    <div class="work-count">06</div>
+    <div class="work-num">06</div>
   </div>
 
+  <!--
+    ═══════════════════════════════════════════════════
+    TO ADD YOUR REEL LINKS — just replace the href=""
+    values below with your Instagram reel URLs.
+    Card 1 already has your first reel added.
+    ═══════════════════════════════════════════════════
+  -->
   <div class="work-grid">
 
-    <!-- Replace href="#" with your actual Instagram reel links -->
-    <a href="#" target="_blank" class="work-card c1 reveal">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">🎬</div></div>
-      <div class="card-tag">Reels</div>
-      <div class="card-content">
-        <div class="card-num">01</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description of this reel. What was the vibe or concept?</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="https://www.instagram.com/reel/DBBp6-KSQQl/" target="_blank" class="reel-card reveal">
+      <div class="reel-bg"><div class="reel-icon">🎬</div></div>
+      <div class="reel-badge">Reels</div>
+      <div class="reel-info">
+        <div class="reel-n">01</div>
+        <div class="reel-title">Dark Cinematic Edit</div>
+        <div class="reel-desc">Moody cinematic reel — pure Intrepid energy.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
-    <a href="#" target="_blank" class="work-card c2 reveal" style="transition-delay:0.1s">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">✨</div></div>
-      <div class="card-tag">Aesthetic</div>
-      <div class="card-content">
-        <div class="card-num">02</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description of this reel. What made it stand out?</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="ADD_REEL_2_LINK_HERE" target="_blank" class="reel-card reveal" style="transition-delay:0.08s">
+      <div class="reel-bg"><div class="reel-icon">🚗</div></div>
+      <div class="reel-badge">Edit</div>
+      <div class="reel-info">
+        <div class="reel-n">02</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
-    <a href="#" target="_blank" class="work-card c3 reveal" style="transition-delay:0.2s">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">🌊</div></div>
-      <div class="card-tag">Collab</div>
-      <div class="card-content">
-        <div class="card-num">03</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description of this brand collab or campaign.</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="ADD_REEL_3_LINK_HERE" target="_blank" class="reel-card reveal" style="transition-delay:0.16s">
+      <div class="reel-bg"><div class="reel-icon">✨</div></div>
+      <div class="reel-badge">Aesthetic</div>
+      <div class="reel-info">
+        <div class="reel-n">03</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
-    <a href="#" target="_blank" class="work-card c2 reveal" style="transition-delay:0.1s">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">🎞️</div></div>
-      <div class="card-tag">Series</div>
-      <div class="card-content">
-        <div class="card-num">04</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description. What was the theme?</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="ADD_REEL_4_LINK_HERE" target="_blank" class="reel-card reveal" style="transition-delay:0.08s">
+      <div class="reel-bg"><div class="reel-icon">🎞️</div></div>
+      <div class="reel-badge">Vibe</div>
+      <div class="reel-info">
+        <div class="reel-n">04</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
-    <a href="#" target="_blank" class="work-card c1 reveal" style="transition-delay:0.2s">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">🔥</div></div>
-      <div class="card-tag">Trending</div>
-      <div class="card-content">
-        <div class="card-num">05</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description of this viral piece of content.</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="ADD_REEL_5_LINK_HERE" target="_blank" class="reel-card reveal" style="transition-delay:0.16s">
+      <div class="reel-bg"><div class="reel-icon">🔥</div></div>
+      <div class="reel-badge">Trending</div>
+      <div class="reel-info">
+        <div class="reel-n">05</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
-    <a href="#" target="_blank" class="work-card c3 reveal" style="transition-delay:0.3s">
-      <div class="card-bg"><div class="card-glow"></div><div class="card-emoji">💫</div></div>
-      <div class="card-tag">Personal</div>
-      <div class="card-content">
-        <div class="card-num">06</div>
-        <div class="card-title">Your Reel Title</div>
-        <div class="card-desc">Short description of this personal creative piece.</div>
-        <div class="card-link">Watch Reel</div>
+    <a href="ADD_REEL_6_LINK_HERE" target="_blank" class="reel-card reveal" style="transition-delay:0.24s">
+      <div class="reel-bg"><div class="reel-icon">💫</div></div>
+      <div class="reel-badge">Collab</div>
+      <div class="reel-info">
+        <div class="reel-n">06</div>
+        <div class="reel-title">Your Reel Title</div>
+        <div class="reel-desc">Short description of this reel.</div>
+        <div class="reel-cta">Watch on Instagram</div>
       </div>
     </a>
 
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about" style="background: var(--navy-mid);">
-  <div class="about-inner">
-    <div class="about-image reveal">
-      <div class="about-image-corner"></div>
-      <div class="about-image-corner2"></div>
-      <div class="about-image-text">[ Your Photo ]<br><br>Drop your best shot here</div>
+<section id="about" class="about-section">
+  <div class="about-grid">
+    <div class="about-img reveal">
+      <div class="img-corner tl"></div>
+      <div class="img-corner br"></div>
+      <div class="img-placeholder">[ Your Photo ]<br><br>Upload photo.jpg to GitHub repo and replace this placeholder</div>
     </div>
-    <div class="reveal" style="transition-delay:0.15s">
-      <div class="sec-label"><div class="sec-label-line"></div><span>About</span></div>
-      <h2 class="sec-title">The <em>vision</em><br>behind Intrepid.</h2>
+    <div class="reveal" style="transition-delay:0.12s">
+      <div class="sec-eyebrow"><div class="sec-line"></div><span>About</span></div>
+      <h2 class="sec-title">The Vision <em>Behind Intrepid</em></h2>
       <p class="about-text">
-        Hey, I'm <strong>Tahir</strong> — a content creator from India with an obsession for aesthetic, mood-driven content. Intrepid isn't just a brand, it's a feeling.<br><br>
-        I create reels that don't just get views — they make people feel something. Every frame is intentional, every vibe is curated.
+        Hey, I'm <strong>Tahir</strong> — a content creator from India obsessed with dark, cinematic aesthetics. Intrepid is my lens on the world.<br><br>
+        Every reel I make has a feeling behind it. Not just views — <strong>vibes that hit different.</strong>
       </p>
-      <div class="skills-wrap">
-        <span class="skill">Reels</span>
-        <span class="skill">Aesthetics</span>
-        <span class="skill">Editing</span>
-        <span class="skill">Scripting</span>
-        <span class="skill">Trends</span>
-        <span class="skill">Brand Vibes</span>
+      <div class="tags">
+        <span class="tag">Dark Aesthetic</span>
+        <span class="tag">Reels</span>
+        <span class="tag">Cinematic Edits</span>
+        <span class="tag">Cars</span>
+        <span class="tag">Mood Content</span>
+        <span class="tag">Storytelling</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
 <section id="contact">
-  <div class="contact-inner">
+  <div class="contact-grid">
     <div class="reveal">
-      <div class="sec-label"><div class="sec-label-line"></div><span>Let's Connect</span></div>
-      <h2 class="sec-title">Got a collab<br><em>in mind?</em></h2>
-      <p class="contact-desc">Open to brand deals, creative collaborations, and projects that match the Intrepid vibe. Let's build something worth watching.</p>
+      <div class="sec-eyebrow"><div class="sec-line"></div><span>Connect</span></div>
+      <h2 class="sec-title">Got a Collab <em>In Mind?</em></h2>
+      <p class="contact-desc">Open to brand deals, creative collabs, and projects that match the Intrepid energy. Let's make something worth watching.</p>
       <a href="mailto:your@email.com" class="btn-gold">Send an Email</a>
     </div>
-    <div class="social-list reveal" style="transition-delay:0.15s">
-      <a href="#" target="_blank" class="social-item">
-        Instagram
-        <div class="social-item-right">
-          <span class="social-item-handle">@your_handle</span>
-          <span class="social-arrow">↗</span>
-        </div>
-      </a>
-      <a href="#" target="_blank" class="social-item">
-        LinkedIn
-        <div class="social-item-right">
-          <span class="social-item-handle">Tahir</span>
-          <span class="social-arrow">↗</span>
-        </div>
-      </a>
-      <a href="mailto:your@email.com" class="social-item">
-        Email
-        <div class="social-item-right">
-          <span class="social-item-handle">your@email.com</span>
-          <span class="social-arrow">↗</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 Intrepid by Tahir. All rights reserved.</p>
-  <div class="footer-brand">INTREPID</div>
-  <p>Made with intention.</p>
-</footer>
-
-<script>
-  // Stars
-  const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 2 + 0.5;
-    s.style.cssText = `
-      width:${size}px; height:${size}px;
-      left:${Math.random()*100}%; top:${Math.random()*100}%;
-      --d:${2+Math.random()*4}s; --o:${0.1+Math.random()*0.4};
-      animation-delay:${Math.random()*4}s;
-    `;
-    starsEl.appendChild(s);
-  }
-
-  // Cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
-  });
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
-    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
-  });
-  (function animRing() {
-    rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-  })();
-
-  // Scroll reveal
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
-</body>
-</html>
+    <div class="links-list reveal" style="transition-delay:0.12s">
+      <a href="https://www.instagram.com/intrepid.01" target="_blank" class="link-row">
+  
